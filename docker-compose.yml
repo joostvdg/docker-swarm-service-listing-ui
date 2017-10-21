@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  service-lister-ui:
+    image: caladreas/swarm-service-listing-ui:${TAG:-latest}
+    build: .
+    ports:
+      - 8087:8087
+    deploy:
+      resources:
+        reservations:
+          memory: 10M
+        limits:
+          memory: 20M
