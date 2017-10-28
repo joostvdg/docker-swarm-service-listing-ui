@@ -9,9 +9,12 @@ import (
 	"context"
 	"../model"
 	"time"
+	"text/template"
+	"os"
 )
 
 type WebserverData struct {
+	Title string
 	Stacks model.Stacks
 }
 
@@ -49,77 +52,14 @@ func StartServer(port string, data *WebserverData, c chan bool) {
 
 
 func (d *WebserverData) rootHandler(w http.ResponseWriter, r *http.Request) {
+	templateRoot := "."
+	if len(os.Getenv("TEMPLATE_ROOT")) > 0 {
+		templateRoot = os.Getenv("TEMPLATE_ROOT")
+	}
 
-	pageHeader := "" +
-		"<!DOCTYPE html>" +
-		"<html>" +
-		"<head>" +
-		"<meta charset=\"utf-8\">" +
-		"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">" +
-		"<title>Docker Flow Proxy Index Site</title>" +
-		"<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css\">" +
-		"<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css\">" +
-		"</head>" +
-		"<body>" +
-		"<section class=\"hero is-dark is-bold\">" +
-		"<div class=\"hero-body\">" +
-		"<div class=\"container\">" +
-		"<h1 class=\"title\">Docker Stacks</h1>" +
-		"</div>" +
-		"</div>" +
-		"</section>"
-
-	tableHeader := "" +
-		"<div class=\"table is-hoverable is-fullwidth\">" +
-		"<table class=\"table is-hoverable\">" +
-		"<thead>" +
-		"<tr>" +
-		"<th>Service Name</th>" +
-		"<th>Service Domain</th>" +
-		"</tr>" +
-		"</thead>" +
-		"<tbody>"
-
-	tableFooter := "" +
-		"</tbody>" +
-		"</table>" +
-		"</div>"
-
-	pageFooter := "" +
-		"</div>" +
-		"</div>" +
-		"</section>" +
-		"</body>" +
-		"</html>"
-
+	indexLoc := fmt.Sprintf("%s/index.html", templateRoot)
+	tmpl := template.Must(template.ParseFiles(indexLoc))
 	userAgent := r.Header.Get("User-Agent")
 	fmt.Printf("  > [URI: %s, Method: %s, User-Agent: %s]\n", r.RequestURI, r.Method, userAgent)
-	fmt.Fprint(w, pageHeader)
-	for _,stack := range d.Stacks {
-		fmt.Fprint(w, "<section class=\"hero is-light\">")
-		fmt.Fprint(w, "<div class=\"hero-body\">")
-		fmt.Fprint(w, "<div class=\"container\">")
-		tableTitle := fmt.Sprintf("<h2 class=\"title\">%s</h2>", stack.Name)
-
-		fmt.Fprint(w, tableTitle)
-		fmt.Fprint(w, tableHeader)
-		for _,service := range stack.Services {
-
-			if len(service.ProxyConfigurations) > 0 {
-				serviceName := service.Name
-				if service.Alias != "" {
-					serviceName = service.Alias
-				}
-				serverListItem := fmt.Sprintf("<td><a href=\"%s\">%s</td><td>%s</td>", service.ProxyConfigurations[0].ServicePath, serviceName, service.ProxyConfigurations[0].ServiceDomain)
-				fmt.Fprint(w, "<tr>")
-				fmt.Fprint(w, serverListItem)
-				fmt.Fprint(w, "</tr>")
-			}
-		}
-		fmt.Fprint(w, tableFooter)
-		fmt.Fprint(w,"</div>")
-		fmt.Fprint(w,"</div>")
-		fmt.Fprint(w,"</section>")
-	}
-	fmt.Fprint(w, pageFooter)
+	tmpl.Execute(w, d)
 }

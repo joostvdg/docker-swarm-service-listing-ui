@@ -8,6 +8,12 @@ RUN go build -v -tags netgo -o docker-swarm-service-listing-ui
 FROM alpine:3.6
 MAINTAINER 	Joost van der Griendt <joostvdg@gmail.com>
 CMD ["docker-swarm-service-listing-ui"]
-HEALTHCHECK --interval=5s --start-period=3s --timeout=5s CMD wget -qO- "http://localhost:8087/"
+ENV API_HOST="api" \
+    API_PROTOCOL="http" \
+    API_PORT="7777" \
+    SERVER_PORT="8087" \
+    TEMPLATE_ROOT="/srv/"
+HEALTHCHECK --interval=5s --start-period=3s --timeout=5s CMD wget -qO- "http://localhost:$SERVER_PORT/"
 COPY --from=build /src/docker-swarm-service-listing-ui /usr/local/bin/docker-swarm-service-listing-ui
+COPY index.html /srv/
 RUN chmod +x /usr/local/bin/docker-swarm-service-listing-ui

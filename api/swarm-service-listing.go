@@ -33,6 +33,7 @@ func GetStacks(url string) model.Stacks{
 	}
 
 	json.Unmarshal([]byte(body), &stacks)
+	fmt.Printf("  > Found %d stacks\n", len(stacks))
 	return stacks
 }
 
