@@ -34,7 +34,6 @@
                                 <th scope="col">Service Name</th>
                                 <th scope="col">Service Path</th>
                                 <th scope="col">Service Domain</th>
-                                <th scope="col">Service Port</th>
                                 <th scope="col">Https</th>
                             </tr>
                             </thead>
@@ -43,11 +42,20 @@
                             {{$name := .Name}}
                             {{range .ProxyConfigurations}}
                             <tr>
-                                <th scope="row"><a href="{{.ServicePath}}">{{$name}}</a></th>
+                                {{if (eq .ServiceDomain "")}}
+                                <th scope="row"><a class="badge badge-primary" href="{{.ServicePath}}">{{$name}}</a></th>
+                                {{else if .HTTPS}}
+                                <th scope="row"><a class="badge badge-warning" href="https://{{.ServiceDomain}}{{.ServicePath}}">{{$name}}*</a></th>
+                                {{else}}
+                                <th scope="row"><a class="badge badge-warning" href="http://{{.ServiceDomain}}{{.ServicePath}}">{{$name}}*</a></th>
+                                {{end}}
                                 <td>{{.ServicePath}}</td>
                                 <td>{{.ServiceDomain}}</td>
-                                <td>{{.ServicePort}}</td>
-                                <td>{{.HTTPS}}</td>
+                                {{ if .HTTPS}}
+                                <td><span class="badge badge-pill badge-success">Yes</span></td>
+                                {{else}}
+                                <td><span class="badge badge-pill badge-warning">No</span></td>
+                                {{end}}
                             </tr>
                             {{end}}
                             {{end}}
