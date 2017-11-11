@@ -48,8 +48,9 @@ func StartServer(port string, data *WebserverData, c chan bool) {
 	}()
 	if b := <-c; b {
 		fmt.Printf("We got told to quit\n")
-		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		server.Shutdown(ctx)
+		cancel()
 	}
 	c <- true
 }
