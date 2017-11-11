@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 )
 
+// Minimal representation of a Docker Stack
 type Stacks []struct {
 	Name     string `json:"Name"`
 	Services []struct {
@@ -18,6 +19,7 @@ type Stacks []struct {
 	} `json:"Services"`
 }
 
+// Implementation of JsonStruct interface's Unmarshal
 func (s *Stacks) Unmarshal(data []byte) (JsonStruct, error) {
 	jsonErr := json.Unmarshal(data, &s)
 	if jsonErr != nil {

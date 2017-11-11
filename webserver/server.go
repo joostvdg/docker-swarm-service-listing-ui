@@ -31,6 +31,11 @@ type Server struct {
 	mux    *http.ServeMux
 }
 
+// Starts the web server on the given port with the given data
+// The data can be refreshed and a next call that is served will return the updated data
+// The channel is for graceful shutdown
+//   when true is received, graceful shutdown is initiated
+//   when graceful shutdown is completed a true is returned
 func StartServer(port string, data *WebserverData, c chan bool) {
 	router := mux.NewRouter()
 	router.HandleFunc("/", data.rootHandler).Methods("GET")
