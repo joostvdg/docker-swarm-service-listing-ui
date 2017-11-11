@@ -1,15 +1,14 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"syscall"
-	"os/signal"
-	"time"
 	"./api"
 	"./webserver"
+	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
-
 
 func main() {
 	fmt.Println("=============================================")
@@ -43,7 +42,7 @@ func main() {
 	fmt.Println("=============================================")
 
 	stacks := api.GetStacks(apiUrl)
-	webserverData := &webserver.WebserverData{Stacks: stacks, Title:"Service Listing"}
+	webserverData := &webserver.WebserverData{Stacks: stacks, Title: "Service Listing"}
 
 	c := make(chan bool)
 	go webserver.StartServer(serverPort, webserverData, c)

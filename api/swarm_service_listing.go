@@ -1,15 +1,15 @@
 package api
 
 import (
-	"fmt"
-	"encoding/json"
-	"net/http"
 	"../model"
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 )
 
-func GetStacks(url string) model.Stacks{
+func GetStacks(url string) model.Stacks {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println(err)
@@ -36,5 +36,3 @@ func GetStacks(url string) model.Stacks{
 	fmt.Printf("  > Found %d stacks\n", len(stacks))
 	return stacks
 }
-
-

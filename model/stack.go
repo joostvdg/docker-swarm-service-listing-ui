@@ -17,6 +17,7 @@ type Stacks []struct {
 		} `json:"ProxyConfigurations"`
 	} `json:"Services"`
 }
+
 func (s *Stacks) Unmarshal(data []byte) (JsonStruct, error) {
 	jsonErr := json.Unmarshal(data, &s)
 	if jsonErr != nil {

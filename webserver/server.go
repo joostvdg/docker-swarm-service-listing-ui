@@ -1,20 +1,20 @@
 package webserver
 
 import (
-	"net/http"
-	"encoding/json"
-	"log"
-	"github.com/gorilla/mux"
-	"fmt"
-	"context"
 	"../model"
-	"time"
-	"text/template"
+	"context"
+	"encoding/json"
+	"fmt"
+	"github.com/gorilla/mux"
+	"log"
+	"net/http"
 	"os"
+	"text/template"
+	"time"
 )
 
 type WebserverData struct {
-	Title string
+	Title  string
 	Stacks model.Stacks
 }
 
@@ -30,7 +30,6 @@ type Server struct {
 	logger *log.Logger
 	mux    *http.ServeMux
 }
-
 
 func StartServer(port string, data *WebserverData, c chan bool) {
 	router := mux.NewRouter()
@@ -49,7 +48,6 @@ func StartServer(port string, data *WebserverData, c chan bool) {
 	}
 	c <- true
 }
-
 
 func (d *WebserverData) rootHandler(w http.ResponseWriter, r *http.Request) {
 	templateRoot := "."
