@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-// Will return the service listings in the form of Docker Stacks
+// GetStacks will return the service listings in the form of Docker Stacks
 // Modeled by the internal model.Stacks struct
 func GetStacks(url string) model.Stacks {
 	req, err := http.NewRequest("GET", url, nil)

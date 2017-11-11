@@ -13,25 +13,42 @@ import (
 	"time"
 )
 
+// WebserverData is a wrapper for the page title and discovered docker Stacks
 type WebserverData struct {
 	Title  string
 	Stacks model.Stacks
 }
 
+// UpdateStacks allows you to update the stacks only
 func (wd *WebserverData) UpdateStacks(stacks model.Stacks) {
 	wd.Stacks = stacks
 }
 
+// HandleGetStacks is the handler function for serving the model.Stacks
 func (wd *WebserverData) HandleGetStacks(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(wd.Stacks)
 }
 
+func (wd *WebserverData) rootHandler(w http.ResponseWriter, r *http.Request) {
+	templateRoot := "."
+	if len(os.Getenv("TEMPLATE_ROOT")) > 0 {
+		templateRoot = os.Getenv("TEMPLATE_ROOT")
+	}
+
+	indexLoc := fmt.Sprintf("%s/index.html", templateRoot)
+	tmpl := template.Must(template.ParseFiles(indexLoc))
+	userAgent := r.Header.Get("User-Agent")
+	fmt.Printf("  > [URI: %s, Method: %s, User-Agent: %s]\n", r.RequestURI, r.Method, userAgent)
+	tmpl.Execute(w, wd)
+}
+
+// Server is a wrapper for the Logger and mux router
 type Server struct {
 	logger *log.Logger
 	mux    *http.ServeMux
 }
 
-// Starts the web server on the given port with the given data
+// StartServer Starts the web server on the given port with the given data
 // The data can be refreshed and a next call that is served will return the updated data
 // The channel is for graceful shutdown
 //   when true is received, graceful shutdown is initiated
@@ -53,17 +70,4 @@ func StartServer(port string, data *WebserverData, c chan bool) {
 		cancel()
 	}
 	c <- true
-}
-
-func (d *WebserverData) rootHandler(w http.ResponseWriter, r *http.Request) {
-	templateRoot := "."
-	if len(os.Getenv("TEMPLATE_ROOT")) > 0 {
-		templateRoot = os.Getenv("TEMPLATE_ROOT")
-	}
-
-	indexLoc := fmt.Sprintf("%s/index.html", templateRoot)
-	tmpl := template.Must(template.ParseFiles(indexLoc))
-	userAgent := r.Header.Get("User-Agent")
-	fmt.Printf("  > [URI: %s, Method: %s, User-Agent: %s]\n", r.RequestURI, r.Method, userAgent)
-	tmpl.Execute(w, d)
 }
