@@ -6,7 +6,10 @@ ADD . /src
 RUN go build -v -tags netgo -o docker-swarm-service-listing-ui
 
 FROM alpine:3.6
-MAINTAINER 	Joost van der Griendt <joostvdg@gmail.com>
+ENV LAST_UPDATE=20171210
+LABEL authors="Joost van der Griendt <joostvdg@gmail.com>"
+LABEL version="0.2.0"
+LABEL description="Docker image for listing (DFP) proxied services in Docker Swarm "
 CMD ["docker-swarm-service-listing-ui"]
 ENV API_HOST="api" \
     API_PROTOCOL="http" \

@@ -13,7 +13,7 @@ import (
 func main() {
 	fmt.Println("=============================================")
 	fmt.Println("=============================================")
-	fmt.Println("=== Docker Swarm Service Lister UI 1.0.5 ====")
+	fmt.Println("=== Docker Swarm Service Lister UI 0.2.1 ====")
 	fmt.Println("=============================================")
 
 	apiProtocol := "http"

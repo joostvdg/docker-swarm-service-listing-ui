@@ -12,10 +12,11 @@ type Stacks []struct {
 		Name                string `json:"Name"`
 		Alias               string `json:"Alias"`
 		ProxyConfigurations []struct {
-			HTTPS         bool   `json:"Https"`
-			ServicePath   string `json:"ServicePath"`
-			ServiceDomain string `json:"ServiceDomain"`
-			ServicePort   int    `json:"ServicePort"`
+			HTTPS           bool   `json:"Https"`
+			MainServicePath string `json:"MainServicePath"`
+			ServicePath     string `json:"ServicePath"`
+			ServiceDomain   string `json:"ServiceDomain"`
+			ServicePort     int    `json:"ServicePort"`
 		} `json:"ProxyConfigurations"`
 	} `json:"Services"`
 }

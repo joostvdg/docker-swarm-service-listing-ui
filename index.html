@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>Docker Swarm Service Listing</title>
+    <title>Service Listing</title>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
@@ -32,7 +32,7 @@
                             <thead>
                             <tr>
                                 <th scope="col">Service Name</th>
-                                <th scope="col">Service Path</th>
+                                <th scope="col">Service Path(s)</th>
                                 <th scope="col">Service Domain</th>
                                 <th scope="col">Https</th>
                             </tr>
@@ -41,13 +41,15 @@
                             {{range .Services}}
                             {{$name := .Name}}
                             {{range .ProxyConfigurations}}
+                            {{ if and (eq .ServiceDomain "") (eq .ServicePath "")}}
+                            {{else}}
                             <tr>
                                 {{if (eq .ServiceDomain "")}}
-                                <th scope="row"><a class="badge badge-primary" href="{{.ServicePath}}">{{$name}}</a></th>
+                                <th scope="row"><a class="badge badge-primary" href="{{.MainServicePath}}">{{$name}}</a></th>
                                 {{else if .HTTPS}}
-                                <th scope="row"><a class="badge badge-warning" href="https://{{.ServiceDomain}}{{.ServicePath}}">{{$name}}*</a></th>
+                                <th scope="row"><a class="badge badge-warning" href="https://{{.ServiceDomain}}{{.MainServicePath}}">{{$name}}*</a></th>
                                 {{else}}
-                                <th scope="row"><a class="badge badge-warning" href="http://{{.ServiceDomain}}{{.ServicePath}}">{{$name}}*</a></th>
+                                <th scope="row"><a class="badge badge-warning" href="http://{{.ServiceDomain}}{{.MainServicePath}}">{{$name}}*</a></th>
                                 {{end}}
                                 <td>{{.ServicePath}}</td>
                                 <td>{{.ServiceDomain}}</td>
@@ -57,6 +59,7 @@
                                 <td><span class="badge badge-pill badge-warning">No</span></td>
                                 {{end}}
                             </tr>
+                            {{end}}
                             {{end}}
                             {{end}}
                             </tbody>

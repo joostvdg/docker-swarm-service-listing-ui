@@ -22,6 +22,13 @@ type WebserverData struct {
 // UpdateStacks allows you to update the stacks only
 func (wd *WebserverData) UpdateStacks(stacks model.Stacks) {
 	wd.Stacks = stacks
+	for _, stack := range wd.Stacks {
+		for _, service := range stack.Services {
+			for _, config := range service.ProxyConfigurations {
+				fmt.Printf(" [Service %s, mainServicePath:%s, servicePath:%s, domain:%s]\n", service.Name, config.MainServicePath, config.ServicePath, config.ServiceDomain)
+			}
+		}
+	}
 }
 
 // HandleGetStacks is the handler function for serving the model.Stacks
